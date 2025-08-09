@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .subtopic-section {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #fafafa;
+        }
+
+        .subtopic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .subtopic-header h4 {
+            color: #374151;
+        }
+
+        .array-input {
+            margin: 10px 0;
+        }
+
+        .array-input input {
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .chapters-list {
+            margin-top: 30px;
+        }
+
+        .chapter-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+        }
+
+        .chapter-header {
+            background: linear-gradient(45deg, #f8fafc, #f1f5f9);
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .chapter-title {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .chapter-id {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .chapter-content {
+            padding: 20px;
+        }
+
+        .chapter-summary {
+            color: #4b5563;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .subtopic-item {
+            background: #f3f4f6;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4f46e5;
+        }
+
+        .subtopic-name {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .chapter-actions {
+            padding: 20px;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #6b7280;
+            padding: 20px;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Chapter Manager</h1>
+            <p>Manage your educational chapters with ease</p>
+        </div>
+
+        <div class="main-content">
+            <div id="message-container"></div>
+
+            <!-- Chapter Form -->
+            <div class="form-section">
+                <h2 id="form-title">Create New Chapter</h2>
+                <form id="chapter-form">
+                    <input type="hidden" id="chapter-id">
+                    
+                    <div class="form-group">
+                        <label for="chapter-name">Chapter Name:</label>
+                        <input type="text" id="chapter-name" name="chapter_name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="summary">Summary:</label>
+                        <textarea id="summary" name="summary" placeholder="Enter chapter summary..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Problems and Solutions:</label>
+                        <div id="problems-container">
+                            <input type="text" class="problem-input" placeholder="Enter problem/solution...">
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addProblemInput()">+ Add Problem</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subtopics:</label>
+                        <div id="subtopics-container"></div>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addSubtopic()">+ Add Subtopic</button>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <button type="submit" class="btn btn-primary" id="submit-btn">Create Chapter</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()" id="cancel-btn" style="display: none;">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Loading indicator -->
+            <div class="loading" id="loading">Loading chapters...</div>
+
+            <!-- Chapters List -->
+            <div class="chapters-list">
+                <h2>📖 Your Chapters</h2>
+                <div id="chapters-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5001/api';
+        let editingChapter = null;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChapters();
+            document.getElementById('chapter-form').addEventListener('submit', handleFormSubmit);
+        });
+
+        // Show message to user
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('message-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `${type}-message`;
+            messageDiv.textContent = message;
+            container.innerHTML = '';
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Add problem input field
+        function addProblemInput() {
+            const container = document.getElementById('problems-container');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'problem-input';
+            input.placeholder = 'Enter problem/solution...';
+            input.style.marginBottom = '8px';
+            container.appendChild(input);
+        }
+
+        // Add subtopic section
+        function addSubtopic() {
+            const container = document.getElementById('subtopics-container');
+            const subtopicDiv = document.createElement('div');
+            subtopicDiv.className = 'subtopic-section';
+            
+            subtopicDiv.innerHTML = `
+                <div class="subtopic-header">
+                    <h4>Subtopic</h4>
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeSubtopic(this)">Remove</button>
+                </div>
+                <div class="form-group">
+                    <label>Subtopic Name:</label>
+                    <input type="text" class="subtopic-name-input" placeholder="Enter subtopic name...">
+                </div>
+                <div class="array-input">
+                    <label>Tables:</label>
+                    <input type="text" class="tables-input" placeholder="Enter table (press Enter for more)">
+                </div>
+                <div class="array-input">
+                    <label>Figures:</label>
+                    <input type="text" class="figures-input" placeholder="Enter figure (press Enter for more)">
+                </div>
+                <div class="array-input">
+                    <label>Experiments:</label>
+                    <input type="text" class="experiments-input" placeholder="Enter experiment (press Enter for more)">
+                </div>
+                <div class="array-input">
+                    <label>Exercises:</label>
+                    <input type="text" class="exercises-input" placeholder="Enter exercise (press Enter for more)">
+                </div>
+            `;
+            
+            container.appendChild(subtopicDiv);
+            
+            // Add event listeners for array inputs
+            const arrayInputs = subtopicDiv.querySelectorAll('.array-input input');
+            arrayInputs.forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const newInput = document.createElement('input');
+                        newInput.type = 'text';
+                        newInput.className = input.className;
+                        newInput.placeholder = input.placeholder;
+                        input.parentNode.appendChild(newInput);
+                        newInput.focus();
+                    }
+                });
+            });
+        }
+
+        // Remove subtopic
+        function removeSubtopic(button) {
+            button.closest('.subtopic-section').remove();
+        }
+
+        // Collect form data
+        function collectFormData() {
+            const formData = {
+                chapter_name: document.getElementById('chapter-name').value,
+                summary: document.getElementById('summary').value,
+                problems_and_solutions: [],
+                subtopics: []
+            };
+
+            // Collect problems
+            const problemInputs = document.querySelectorAll('.problem-input');
+            problemInputs.forEach(input => {
+                if (input.value.trim()) {
+                    formData.problems_and_solutions.push(input.value.trim());
+                }
+            });
+
+            // Collect subtopics
+            const subtopicSections = document.querySelectorAll('.subtopic-section');
+            subtopicSections.forEach(section => {
+                const subtopic = {
+                    subtopic_name: section.querySelector('.subtopic-name-input').value || '',
+                    tables: [],
+                    figures: [],
+                    experiments: [],
+                    exercises: []
+                };
+
+                // Collect tables
+                section.querySelectorAll('.tables-input').forEach(input => {
+                    if (input.value.trim()) {
+                        subtopic.tables.push(input.value.trim());
+                    }
+                });
+
+                // Collect figures
+                section.querySelectorAll('.figures-input').forEach(input => {
+                    if (input.value.trim()) {
+                        subtopic.figures.push(input.value.trim());
+                    }
+                });
+
+                // Collect experiments
+                section.querySelectorAll('.experiments-input').forEach(input => {
+                    if (input.value.trim()) {
+                        subtopic.experiments.push(input.value.trim());
+                    }
+                });
+
+                // Collect exercises
+                section.querySelectorAll('.exercises-input').forEach(input => {
+                    if (input.value.trim()) {
+                        subtopic.exercises.push(input.value.trim());
+                    }
+                });
+
+                formData.subtopics.push(subtopic);
+            });
+
+            return formData;
+        }
+
+        // Handle form submission
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const formData = collectFormData();
+            const isEditing = editingChapter !== null;
+            
+            try {
+                let response;
+                if (isEditing) {
+                    response = await fetch(`${API_BASE}/chapters/${editingChapter}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/chapters`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                }
+
+                if (response.ok) {
+                    showMessage(isEditing ? 'Chapter updated successfully!' : 'Chapter created successfully!');
+                    resetForm();
+                    loadChapters();
+                } else {
+                    const error = await response.json();
+                    showMessage(error.error || 'An error occurred', 'error');
+                }
+            } catch (error) {
+                showMessage('Network error occurred', 'error');
+            }
+        }
+
+        // Load chapters from API
+        async function loadChapters() {
+            const loading = document.getElementById('loading');
+            const container = document.getElementById('chapters-container');
+            
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/chapters`);
+                const chapters = await response.json();
+                
+                container.innerHTML = '';
+                
+                if (chapters.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">No chapters found. Create your first chapter above!</p>';
+                } else {
+                    chapters.forEach(chapter => {
+                        container.appendChild(createChapterCard(chapter));
+                    });
+                }
+            } catch (error) {
+                container.innerHTML = '<p style="color: #ef4444; text-align: center;">Error loading chapters</p>';
+            }
+            
+            loading.style.display = 'none';
+        }
+
+        // Create chapter card element
+        function createChapterCard(chapter) {
+            const card = document.createElement('div');
+            card.className = 'chapter-card';
+            
+            let subtopicsHTML = '';
+            if (chapter.subtopics && chapter.subtopics.length > 0) {
+                subtopicsHTML = chapter.subtopics.map(subtopic => `
+                    <div class="subtopic-item">
+                        <div class="subtopic-name">${subtopic.subtopic_name || 'Unnamed Subtopic'}</div>
+                        ${subtopic.tables && subtopic.tables.length > 0 ? `<div>📊 Tables: ${subtopic.tables.join(', ')}</div>` : ''}
+                        ${subtopic.figures && subtopic.figures.length > 0 ? `<div>📈 Figures: ${subtopic.figures.join(', ')}</div>` : ''}
+                        ${subtopic.experiments && subtopic.experiments.length > 0 ? `<div>🔬 Experiments: ${subtopic.experiments.join(', ')}</div>` : ''}
+                        ${subtopic.exercises && subtopic.exercises.length > 0 ? `<div>✏️ Exercises: ${subtopic.exercises.join(', ')}</div>` : ''}
+                    </div>
+                `).join('');
+            }
+            
+            card.innerHTML = `
+                <div class="chapter-header">
+                    <div class="chapter-title">${chapter.chapter_name || 'Untitled Chapter'}</div>
+                    <div class="chapter-id">ID: ${chapter.id}</div>
+                </div>
+                <div class="chapter-content">
+                    ${chapter.summary ? `<div class="chapter-summary">${chapter.summary}</div>` : ''}
+                    ${chapter.problems_and_solutions && chapter.problems_and_solutions.length > 0 ? 
+                        `<div><strong>Problems & Solutions:</strong><br>${chapter.problems_and_solutions.map(p => `• ${p}`).join('<br>')}</div>` : ''}
+                    ${subtopicsHTML ? `<div><strong>Subtopics:</strong>${subtopicsHTML}</div>` : ''}
+                </div>
+                <div class="chapter-actions">
+                    <button class="btn btn-success btn-small" onclick="editChapter(${chapter.id})">✏️ Edit</button>
+                    <button class="btn btn-danger btn-small" onclick="deleteChapter(${chapter.id})">🗑️ Delete</button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Edit chapter
+        async function editChapter(chapterId) {
+            try {
+                const response = await fetch(`${API_BASE}/chapters/${chapterId}`);
+                const chapter = await response.json();
+                
+                editingChapter = chapterId;
+                document.getElementById('form-title').textContent = 'Edit Chapter';
+                document.getElementById('submit-btn').textContent = 'Update Chapter';
+                document.getElementById('cancel-btn').style.display = 'inline-block';
+                
+                // Fill form with chapter data
+                document.getElementById('chapter-name').value = chapter.chapter_name || '';
+                document.getElementById('summary').value = chapter.summary || '';
+                
+                // Clear existing problems and add chapter's problems
+                const problemsContainer = document.getElementById('problems-container');
+                problemsContainer.innerHTML = '';
+                if (chapter.problems_and_solutions && chapter.problems_and_solutions.length > 0) {
+                    chapter.problems_and_solutions.forEach(problem => {
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.className = 'problem-input';
+                        input.value = problem;
+                        input.style.marginBottom = '8px';
+                        problemsContainer.appendChild(input);
+                    });
+                } else {
+                    addProblemInput();
+                }
+                
+                // Clear existing subtopics and add chapter's subtopics
+                const subtopicsContainer = document.getElementById('subtopics-container');
+                subtopicsContainer.innerHTML = '';
+                if (chapter.subtopics && chapter.subtopics.length > 0) {
+                    chapter.subtopics.forEach(subtopic => {
+                        addSubtopic();
+                        const lastSubtopic = subtopicsContainer.lastElementChild;
+                        lastSubtopic.querySelector('.subtopic-name-input').value = subtopic.subtopic_name || '';
+                        
+                        // Fill array inputs
+                        const arrayTypes = ['tables', 'figures', 'experiments', 'exercises'];
+                        arrayTypes.forEach(type => {
+                            const inputs = lastSubtopic.querySelectorAll(`.${type}-input`);
+                            if (subtopic[type] && subtopic[type].length > 0) {
+                                subtopic[type].forEach((item, index) => {
+                                    if (index === 0) {
+                                        inputs[0].value = item;
+                                    } else {
+                                        const newInput = document.createElement('input');
+                                        newInput.type = 'text';
+                                        newInput.className = `${type}-input`;
+                                        newInput.value = item;
+                                        inputs[0].parentNode.appendChild(newInput);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                }
+                
+                // Scroll to form
+                document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                showMessage('Error loading chapter for editing', 'error');
+            }
+        }
+
+        // Delete chapter
+        async function deleteChapter(chapterId) {
+            if (confirm('Are you sure you want to delete this chapter? This action cannot be undone.')) {
+                try {
+                    const response = await fetch(`${API_BASE}/chapters/${chapterId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        showMessage('Chapter deleted successfully!');
+                        loadChapters();
+                    } else {
+                        showMessage('Error deleting chapter', 'error');
+                    }
+                } catch (error) {
+                    showMessage('Network error occurred', 'error');
+                }
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            editingChapter = null;
+            document.getElementById('form-title').textContent = 'Create New Chapter';
+            document.getElementById('submit-btn').textContent = 'Create Chapter';
+            document.getElementById('cancel-btn').style.display = 'none';
+            document.getElementById('chapter-form').reset();
+            
+            // Reset dynamic inputs
+            document.getElementById('problems-container').innerHTML = '<input type="text" class="problem-input" placeholder="Enter problem/solution...">';
+            document.getElementById('subtopics-container').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
