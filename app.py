@@ -8,7 +8,6 @@ app = Flask(__name__)
 # Be more specific with CORS to allow all origins for API routes
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# Get the database URL from the environment variable, with a default for local testing
 database_url = os.getenv('DATABASE_URL', 'postgresql://flaskuser:flaskpass@postgres/flask_crud_db')
 
 
@@ -108,7 +107,6 @@ def get_chapter(chapter_id):
         return jsonify({'error': 'Not found'}), 404
         
     subtopic_list = []
-    # Use the relationship here as well
     for sub in chapter.subtopics:
         subtopic_list.append({
             'subtopic_name': sub.subtopicname,
@@ -136,7 +134,6 @@ def update_chapter(chapter_id):
     chapter.summary = data.get('summary', chapter.summary)
     chapter.problems_and_solutions = json.dumps(data.get('problems_and_solutions', []))
 
-    # Delete old subtopics via the relationship
     for sub in chapter.subtopics:
         db.session.delete(sub)
 
@@ -162,8 +159,6 @@ def delete_chapter(chapter_id):
     if not chapter:
         return jsonify({'error': 'Not found'}), 404
 
-    # The incorrect line is removed. 
-    # The 'cascade' option in the model handles deleting subtopics automatically.
     db.session.delete(chapter)
     db.session.commit()
     return jsonify({'message': 'Chapter and related subtopics deleted'})
@@ -172,4 +167,5 @@ def delete_chapter(chapter_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
     app.run(debug=True, host='0.0.0.0', port=5001, use_reloader=True, reloader_type='stat')
